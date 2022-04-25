@@ -12,6 +12,8 @@ const useMarvelService = () => {
       `${_apiBase}characters?limit=9&offset=${offset}&${_apiKey}`
     );
 
+    console.log('getAllChars');
+
     return res.data.results.map(_transformCharacter);
   };
 

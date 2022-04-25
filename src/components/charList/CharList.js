@@ -8,8 +8,8 @@ import useMarvelService from '../../services/MarvelService';
 import './charList.scss';
 
 const CharList = (props) => {
-  const [characters, setCharacters] = useState([]);
-  const [newCharLoading, setNewCharLoading] = useState(false);
+  const [charList, setCharList] = useState([]);
+  const [newItemLoading, setNewItemLoading] = useState(false);
   const [offset, setOffset] = useState(210);
   const [charEnded, setCharEnded] = useState(false);
 
@@ -20,25 +20,23 @@ const CharList = (props) => {
   }, []);
 
   const onRequest = (offset, initial) => {
-    initial ? setNewCharLoading(false) : setNewCharLoading(true);
+    initial ? setNewItemLoading(false) : setNewItemLoading(true);
 
-    getAllCharacters(offset).then(onCharactersLoaded);
+    getAllCharacters(offset).then(onCharListLoaded);
   };
 
-  const onCharactersLoaded = (newCharacters) => {
+  const onCharListLoaded = (newCharList) => {
     let ended = false;
 
-    if (newCharacters.length < 9) {
+    if (newCharList.length < 9) {
       ended = true;
     }
 
-    setCharacters((characters) => [...characters, ...newCharacters]);
-    setNewCharLoading(false);
+    setCharList((charList) => [...charList, ...newCharList]);
+    setNewItemLoading(false);
     setOffset((offset) => offset + 9);
     setCharEnded(ended);
   };
-
-  console.log('charList!');
 
   const charRefs = useRef([]);
 
@@ -92,10 +90,10 @@ const CharList = (props) => {
     }
   };
 
-  const charactersList = renderCharacters(characters);
+  const charactersList = renderCharacters(charList);
 
   const errorMessage = error ? <ErrorMessage /> : null;
-  const spinner = loading && !newCharLoading ? <Spinner /> : null;
+  const spinner = loading && !newItemLoading ? <Spinner /> : null;
 
   return (
     <div className="char__list">
@@ -104,7 +102,7 @@ const CharList = (props) => {
       {charactersList}
       <button
         className="button button__main button__long"
-        disabled={newCharLoading}
+        disabled={newItemLoading}
         style={{ display: charEnded ? 'none' : 'block' }}
         onClick={() => onRequest(offset)}
       >

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import PropTypes from 'prop-types';
 
 import Spinner from '../spinner/Spinner';
@@ -57,25 +58,30 @@ const CharList = (props) => {
       }
 
       return (
-        <li
-          key={index}
-          className="char__item"
-          onClick={() => onCharClick(char.id, index)}
-          onKeyDown={(e) => onCharKeyDown(e, char.id, index)}
-          tabIndex="0"
-          ref={(el) => (charRefs.current[index] = el)}
-        >
-          <img
-            src={char.thumbnail}
-            alt={char.name}
-            className={thumbClassName}
-          />
-          <div className="char__name">{char.name}</div>
-        </li>
+        <CSSTransition key={char.id} timeout={500} classNames="char__item">
+          <li
+            className="char__item"
+            onClick={() => onCharClick(char.id, index)}
+            onKeyDown={(e) => onCharKeyDown(e, char.id, index)}
+            tabIndex="0"
+            ref={(el) => (charRefs.current[index] = el)}
+          >
+            <img
+              src={char.thumbnail}
+              alt={char.name}
+              className={thumbClassName}
+            />
+            <div className="char__name">{char.name}</div>
+          </li>
+        </CSSTransition>
       );
     });
 
-    return <ul className="char__grid">{charactersList}</ul>;
+    return (
+      <ul className="char__grid">
+        <TransitionGroup component={null}>{charactersList}</TransitionGroup>
+      </ul>
+    );
   }
 
   const onCharClick = (id, index) => {
